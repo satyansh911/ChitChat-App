@@ -9,13 +9,14 @@ import ProfilePage from './pages/ProfilePage';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from './store/useAuthStore.js';
 import 'ldrs/grid';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
-  }, []); // Run only on mount
+  }, []);
 
   console.log({ authUser });
 
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/settings" element={authUser ? <SettingsPage /> : <Navigate to="/login" replace />} />
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" replace />} />
       </Routes>
+      <Toaster/>
     </div>
   );
 };
