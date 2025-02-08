@@ -69,7 +69,8 @@ export const login = async (req,res)=>{
             profilePic : user.profilePic,
         })
     }catch(error){
-        console.log("Error in login controller")
+        console.log("Error in login controller", error.message);
+        res.status(500).json({message: "Internal Server Error"});
     }
 };
 
@@ -88,7 +89,7 @@ export const updateProfile = async (req,res) =>{
         const {profilePic} = req.body;
         const userId = req.user._id;
         if(!profilePic){
-            return res.status(400).json({message : "Profile Pic is required."})
+            return res.status(400).json({message : "Profile Pic is required."});
         }
         const uploadResponse = await cloudinary.uploader.upload(profilePic);
         const updatedUser = await User.findByIdAndUpdate(userId, {profilePic: uploadResponse.secure_url}, {new: true});

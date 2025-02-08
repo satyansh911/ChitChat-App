@@ -1,7 +1,6 @@
 import React from 'react';
 import {useState} from 'react';
 import { useAuthStore } from '../store/useAuthStore';
-import { MessageSquare } from 'lucide-react';
 import lottie from "lottie-web";
 import { defineElement } from "@lordicon/element";
 import { User, Lock, Mail, Eye, EyeOff} from 'lucide-react';
@@ -140,10 +139,7 @@ const SignUpPage = () => {
 
                         <button 
                             type="submit" 
-                            className="w-full h-12 rounded-lg border border-green-500 bg-green-500 text-white shadow-2xl transition-all 
-                            relative overflow-hidden before:absolute before:right-0 before:top-0 before:h-12 before:w-6 
-                            before:translate-x-12 before:rotate-6 before:bg-white before:opacity-10 before:duration-700 
-                            hover:shadow-green-500 hover:before:-translate-x-40 flex items-center justify-center"
+                            className="btn btn-primary w-full"
                             disabled={isSigningUp}
                         >
                             {isSigningUp ? (
