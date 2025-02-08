@@ -25,7 +25,7 @@ const Navbar = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <Typewriter words={["ChitChat"]} loop={1} cursor cursorStyle="|" typeSpeed={100} onLoopDone={() => setCursor("")}/>
+        <Typewriter words={["ChitChat"]} loop={1} cursor cursorStyle="|" typeSpeed={100} />
       </motion.h1>
     </Link>
 
