@@ -50,7 +50,7 @@ const LoginPage = () => { // Removed async from here
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div className="w-24 h-24">
-                <lord-icon trigger="loop" src="../../wired-flat-268-avatar-man-hover-glance.json" style={{ width: "100px", height: "100px" }}></lord-icon>
+                <lord-icon trigger="loop" src="/wired-flat-268-avatar-man-hover-glance.json" style={{ width: "100px", height: "100px" }}></lord-icon>
               </div>
               <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
               <p className="text-base-content/60">Sign in to your account</p>

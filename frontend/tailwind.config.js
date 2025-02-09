@@ -1,7 +1,6 @@
 import daisyui from "daisyui";
 
-/** @type {import('tailwindcss').Config} */
-export default{
+module.exports = {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"], // Adjust based on your file structure
   theme: {
     extend: {
@@ -53,6 +52,6 @@ export default{
       "dim",
       "nord",
       "sunset",
-    ]
-  }
+    ],
+  },
 };

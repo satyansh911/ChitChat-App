@@ -10,7 +10,7 @@ const NoChatSelected = () => {
         <div className="flex justify-center gap-4 mb-4">
           <div className="relative">
             <div className = "w-24 h-24">
-                <lord-icon trigger="loop" src="../../wired-lineal-2803-engagement-alt-hover-pinch.json" style={{ width: "100px", height: "100px" }}></lord-icon>
+                <lord-icon trigger="loop" src="/wired-lineal-2803-engagement-alt-hover-pinch.json" style={{ width: "100px", height: "100px" }}></lord-icon>
             </div>
           </div>
         </div>
