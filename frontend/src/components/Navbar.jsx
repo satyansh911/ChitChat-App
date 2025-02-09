@@ -16,7 +16,7 @@ const Navbar = () => {
     <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-all">
       <lord-icon 
         trigger="loop"
-        src="../../wired-flat-981-consultation-hover-conversation.json"
+        src="/wired-flat-981-consultation-hover-conversation.json"
         style={{ width: "50px", height: "50px" }} 
       />
       <motion.h1

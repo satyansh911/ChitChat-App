@@ -41,7 +41,7 @@ const ProfilePage = () => {
               />
               ) : (
                 <lord-icon
-                  src="../../wired-flat-1448-three-leaf-clover-hover-pinch.json"
+                  src="/wired-flat-1448-three-leaf-clover-hover-pinch.json"
                   trigger="loop"
                   style={{ width: '128px', height: '128px' }}
                 ></lord-icon>
