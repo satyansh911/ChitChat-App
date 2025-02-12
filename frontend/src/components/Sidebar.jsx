@@ -6,17 +6,19 @@ import { useAuthStore } from '../store/useAuthStore';
 
 const Sidebar = () => {
     const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-    const {onlineUsers} = useAuthStore();
+    const { onlineUsers } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
     useEffect(() => {
         getUsers();
     }, [getUsers]);
 
-    const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users ;
+    const filteredUsers = showOnlineOnly
+        ? users.filter(user => onlineUsers.includes(user._id))
+        : [...users].sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime));
 
     if (isUsersLoading) {
-        return <SidebarSkeleton />
+        return <SidebarSkeleton />;
     }
 
     return (
@@ -38,41 +40,53 @@ const Sidebar = () => {
                     </label>
                     <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
                 </div>
-                <div className="overflow-y-auto w-full py-3">
-                    {filteredUsers.map((user) => (
-                        <button
-                            key={user._id}
-                            onClick={() => setSelectedUser(user)}
-                            className={`
-                                w-full p-3 flex items-center gap-3 group transition-colors
-                                ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : "bg-transparent"}
-                                hover:bg-base-300
-                            `}
-                        >
-                            <div className="relative mx-auto lg:mx-0">
-                                <img
-                                    src={user.profilePic || "/boy.png"}
-                                    alt={user.name}
-                                    className="size-12 object-cover rounded-full"
-                                />
-                                {onlineUsers.includes(user._id) && (
-                                    <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
-                                )}
-                            </div>
-                            <div className="hidden lg:block text-left min-w-0">
-                                <div className="font-medium truncate group-hover:text-yellow-400">
-                                    {user.fullName}
-                                </div>
-                                <div className="text-sm text-zinc-400">
-                                    {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-                                </div>
-                            </div>
-                        </button>
-                    ))}
-                    {filteredUsers.length === 0 && (
-                        <div className="text-center text-zinc-500 py-4">No online users</div>
-                    )}
-                </div>
+            </div>
+
+            {/* ✅ Scrollable Contacts List */}
+            <div className="flex-1 overflow-y-auto py-3 scrollbar-fade">
+            {filteredUsers.map((user) => (
+    <button
+        key={user._id}
+        onClick={() => {
+            setSelectedUser(user);
+            // ✅ Clear "New Message" when opening the chat
+            useChatStore.getState().clearNewMessageFlag();
+        }}
+        className={`w-full p-3 flex items-center gap-3 group transition-colors 
+            ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : "bg-transparent"} 
+            hover:bg-base-300`}
+    >
+        <div className="relative mx-auto lg:mx-0">
+            <img
+                src={user.profilePic || "/boy.png"}
+                alt={user.name}
+                className="size-12 object-cover rounded-full"
+            />
+            {onlineUsers.includes(user._id) && (
+                <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
+            )}
+        </div>
+        <div className="hidden lg:block text-left min-w-0 flex-1">
+            <div className="font-medium truncate group-hover:text-yellow-400">
+                {user.fullName}
+            </div>
+            <div className="text-sm text-zinc-400">
+                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+            </div>
+        </div>
+
+        {/* ✅ New Message Badge */}
+        {user.hasNewMessage && (
+            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                New Message
+            </span>
+        )}
+    </button>
+))}
+
+                {filteredUsers.length === 0 && (
+                    <div className="text-center text-zinc-500 py-4">No online users</div>
+                )}
             </div>
         </aside>
     );
