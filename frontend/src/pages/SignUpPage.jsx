@@ -45,18 +45,17 @@ const SignUpPage = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const isValid = validateForm();
     
-        const success = validateForm();
+        if (isValid) {
+            const response = await signup(formData); // Ensure this returns { success: true/false }
     
-        if (success === true) {
-            const response = await signup(formData); // Ensure `signup` returns a promise
             if (response?.success) {
-                navigate("/"); // Redirect to dashboard or another page
-            } else {
-                toast.error("Signup failed. Try again.");
+                navigate("/"); // Redirect on successful signup
             }
-        };
-      };
+        }
+    };
+    
 
     return (
         <div className ="min-h-screen grid lg:grid-cols-2">

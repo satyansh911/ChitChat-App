@@ -14,49 +14,66 @@ export const useAuthStore = create ((set, get) => ({
     onlineUsers: [],
     socket:null,
 
-    checkAuth: async() => {
-        try{
-            const res = await axiosInstance.get("/auth/check");
-
-            set({authUser: res.data});
-            get().connectSocket();
-        }catch(error){
-            console.log("Error in checkAuth :", error.message);
-            set({authUser: null});
+    checkAuth: async () => {
+        const token = localStorage.getItem("token"); // ✅ Check for token first
+    
+        if (!token) {
+            set({ authUser: null, isCheckingAuth: false });
+            return; // 🚫 Skip if there's no token
         }
-        finally{
-            set({isCheckingAuth: false});
+    
+        try {
+            const res = await axiosInstance.get("/auth/check");
+            set({ authUser: res.data });
+            get().connectSocket();
+        } catch (error) {
+            console.log("Error in checkAuth:", error.message);
+            set({ authUser: null });
+        } finally {
+            set({ isCheckingAuth: false });
         }
     },
 
-    signup: async(data) => {
-        set({isSigningUp: true});
-        try{
-            const res= await axiosInstance.post("/auth/signup", data);
-            console.log("API Response:", res);
-            set({authUser: res.data});
+    signup: async (data) => {
+        set({ isSigningUp: true });
+        try {
+            const res = await axiosInstance.post("/auth/signup", data);
+    
+            // ✅ Save the token from the response
+            const token = res.data.token;
+            if (token) {
+                localStorage.setItem("token", token); // ✅ Store token in localStorage
+            }
+    
+            set({ authUser: res.data });
             toast.success("Account created successfully");
             get().connectSocket();
             return true;
-        }catch(error){
+        } catch (error) {
             const errorMessage = error.response?.data?.message || "Signup failed. Please try again.";
             toast.error(errorMessage);
             return false;
-        } finally{
-            set({isSigningUp: false});
+        } finally {
+            set({ isSigningUp: false });
         }
     },
+    
 
     login: async (data) => {
         set({ isLoggingIn: true });
         try {
             const res = await axiosInstance.post("/auth/login", data);
+    
+            // ✅ Save the token from the response
+            const token = res.data.token;
+            if (token) {
+                localStorage.setItem("token", token); // ✅ Store token in localStorage
+            }
+    
             set({ authUser: res.data });
             toast.success("Logged in successfully");
             get().connectSocket();
-            setTimeout(() => {
-                useAuthStore.getState().checkAuth();  // Re-check after login
-            }, 500);
+            await get().checkAuth(); // ✅ Ensures the user is authenticated correctly
             return true;
         } catch (error) {
             console.error("Login failed:", error);
@@ -68,14 +85,23 @@ export const useAuthStore = create ((set, get) => ({
         }
     },
     
-    logout: async(data) =>{
-        try{
+    
+    logout: async () => {
+        try {
             await axiosInstance.post("/auth/logout");
-            set({authUser : null});
+            localStorage.removeItem("token");
+            set({ authUser: null });
+    
+            // Show the toast immediately
             toast.success("Logged Out Successfully");
-            get().disconnectSocket();
-        }catch(error){
-            toast.error(error.response.data.message);
+    
+            // Delay redirection to allow the toast to be visible
+            setTimeout(() => {
+                get().disconnectSocket(); // Disconnect socket right before redirect
+                window.location.href = '/login';
+            }, 1500); // 1.5-second delay for smoother experience
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Logout failed.");
         }
     },
 

@@ -9,6 +9,7 @@ export const useChatStore = create((set, get) => ({
     selectedUser: null,
     isUsersLoading : false,
     isMessagesLoading: false,
+    newMessageFlag: false,
 
     getUsers: async () => {
         set({isUsersLoading: true});
@@ -66,4 +67,6 @@ export const useChatStore = create((set, get) => ({
     },
 
     setSelectedUser: (selectedUser) => set({selectedUser}),
+
+    clearNewMessageFlag: () => set({newMessageFlag: false}),
 }))
