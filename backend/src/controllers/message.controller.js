@@ -16,23 +16,28 @@
         }
     };
 
-    export const getMessages = async (req,res) =>{
-        try{
-            const {id : userToChatId} = req.params;
+    export const getMessages = async (req, res) => {
+        try {
+            const { id: userToChatId } = req.params;
             const myId = req.user._id;
-
+    
             const messages = await Message.find({
-                $or : [
-                    {senderId : myId, receiverId : userToChatId},
-                    {senderId : userToChatId, receiverId : myId},
-                ]
-            });
+                $or: [
+                    { senderId: myId, receiverId: userToChatId },
+                    { senderId: userToChatId, receiverId: myId },
+                ],
+            })
+            .sort({ createdAt: 1 })
+            .lean(); // Converts Mongoose docs to plain JS objects
+    
             res.status(200).json(messages);
-        }catch(error){
-            console.log("Error in getMessages controller : ", error.message);
-            res.status(500).json({message : "Internal Server Error"});
+        } catch (error) {
+            console.log("Error in getMessages controller:", error.message);
+            res.status(500).json({ message: "Internal Server Error" });
         }
     };
+    
+    
 
     export const sendMessage = async (req,res) => {
         try{
@@ -67,3 +72,35 @@
             res.status(500).json({message : "Internal Server Error"});
         }
     };
+
+    export const addReaction = async (req, res) => {
+        try {
+            const { messageId, userId, emoji } = req.body;
+    
+            if (!messageId || !userId || !emoji) {
+                return res.status(400).json({ error: "Missing required fields" });
+            }
+    
+            const message = await Message.findById(messageId);
+            if (!message) {
+                return res.status(404).json({ error: "Message not found" });
+            }
+    
+            // Remove previous reaction from the same user
+            message.reactions = message.reactions.filter((r) => r.userId.toString() !== userId);
+    
+            // Add new reaction
+            message.reactions.push({ userId, emoji });
+    
+            await message.save();
+    
+            // ✅ Emit updated reactions to all connected users
+            io.emit("messageReaction", { messageId, reactions: message.reactions });
+    
+            res.status(200).json({ message: "Reaction added successfully", data: message });
+        } catch (error) {
+            console.error("Error adding reaction:", error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    };
+    
