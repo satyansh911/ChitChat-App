@@ -11,7 +11,7 @@ import path from "path";
 dotenv.config();
 
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
 app.use(express.json({ limit : "50mb"}));
@@ -34,7 +34,7 @@ if(process.env.NODE_ENV==="production"){
     })
 }
 
-server.listen(5001, () =>{
+server.listen(PORT, () =>{
     console.log(`Server listening on port ${PORT}`);
     connectDB();
 }) 
