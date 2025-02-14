@@ -126,11 +126,15 @@ export const useChatStore = create((set, get) => ({
     },
 
     setSelectedUser: (selectedUser) => {
-        const { unreadMessages } = get();
-        const updatedUnread = { ...unreadMessages };
-        delete updatedUnread[selectedUser._id];
-
-        set({ selectedUser, unreadMessages: updatedUnread });
+        if (selectedUser) {
+            const { unreadMessages } = get();
+            const updatedUnread = { ...unreadMessages };
+            delete updatedUnread[selectedUser._id]; // ⛔ This will throw an error if selectedUser is null
+    
+            set({ selectedUser, unreadMessages: updatedUnread });
+        } else {
+            set({ selectedUser: null }); // ✅ Safe handling when clearing selected user
+        }
     },
 
     clearNewMessageFlag: () => set({ newMessageFlag: false }),
