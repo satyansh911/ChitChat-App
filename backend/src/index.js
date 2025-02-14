@@ -19,7 +19,7 @@ app.use(express.urlencoded({ limit : "50mb", extended: true}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin : "http://localhost:5173",
+    origin : ["http://localhost:5173","https://chitchat-vvxt.onrender.com"],
     credentials: true,
 }))
 
@@ -34,7 +34,7 @@ if(process.env.NODE_ENV==="production"){
     })
 }
 
-server.listen(PORT, () =>{
-    console.log(`Server running at: ${process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`}`);
+server.listen(5001, () =>{
+    console.log(`Server listening on port ${PORT}`);
     connectDB();
 }) 

@@ -7,7 +7,11 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5001");
+const socket = io(import.meta.env.MODE === "development"
+  ? "http://localhost:5001"
+  : import.meta.env.REACT_APP_BACKEND_URL || "https://chitchat-vvxt.onrender.com"
+);
+
 
 const ChatContainer = () => {
   const {
