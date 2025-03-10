@@ -10,7 +10,12 @@ export const useChatStore = create((set, get) => ({
     isUsersLoading: false,
     isMessagesLoading: false,
     newMessageFlag: false,
-    unreadMessages: {},  
+    unreadMessages: {},
+    isMusicPlayerOpen: false,
+
+    toggleMusicPlayer: () => {
+        set((state) => ({ isMusicPlayerOpen: !state.isMusicPlayerOpen}))
+    },
 
     getUsers: async () => {
         set({ isUsersLoading: true });
