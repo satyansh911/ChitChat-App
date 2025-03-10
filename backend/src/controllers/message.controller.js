@@ -53,11 +53,19 @@
                 });
                 imageUrl = uploadResponse.secure_url;
             }
+            if (song) {
+                const uploadResponse = await cloudinary.uploader.upload(song, {
+                    folder: "chat-songs",
+                    resource_type: "video", // Audio files are stored as 'video' in Cloudinary
+                });
+                songUrl = uploadResponse.secure_url;
+            }
             const newMessage = new Message({
                 senderId,
                 receiverId,
                 text,
                 image : imageUrl,
+                song: songUrl,
             });
             await newMessage.save();
 

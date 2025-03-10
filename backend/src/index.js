@@ -7,6 +7,7 @@ import messageRoutes from "./routes/message.route.js";
 import cors from "cors";
 import { app, server} from "./lib/socket.js";
 import path from "path";
+import multer from "multer";
 
 dotenv.config();
 
@@ -25,6 +26,31 @@ app.use(cors({
 
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
+app.use("/songs", express.static(path.join(__dirname, "songs"), {
+    setHeaders: (res, path) => {
+        if (path.endsWith(".mp3")) {
+          res.setHeader("Content-Type", "audio/mpeg");
+        }
+    }
+}));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, path.join(__dirname, "songs")), // Save inside the "songs" folder in the backend
+    filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
+    
+const upload = multer({storage});
+
+app.post("/upload", upload.single("song"), (req,res) => {
+    if(!req.file){
+        return res.status(400).json({error: "No file uploaded"});
+    }
+    res.json({
+        message: "File uploaded successfully",
+        url: `/songs/${req.file.filename}`,
+    });
+});
+
 
 if(process.env.NODE_ENV==="production"){
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
