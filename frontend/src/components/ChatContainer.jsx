@@ -124,15 +124,6 @@ const ChatContainer = () => {
                 <div className="chat-bubble relative flex flex-col">
                   {message.text && <span className="ml-2">{message.text}</span>}
 
-                  {message.text?.endsWith(".mp3") && (
-                    <button
-                      className="mt-2 px-2 py-1 bg-blue-500 text-white rounded text-sm"
-                      onClick={() => handlePlaySong(message.text)}
-                    >
-                      ▶ Play Music
-                    </button>
-                  )}
-
                   {reactions[message._id]?.length > 0 && (
                     <div className="absolute -bottom-3 px-2 py-1 rounded-md bg-black/50 text-white text-xs flex space-x-1">
                       {Array.from(new Set(reactions[message._id].map((r) => r.emoji))).map((emoji, index) => (
