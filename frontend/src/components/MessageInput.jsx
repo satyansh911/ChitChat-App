@@ -8,13 +8,12 @@ const MessageInput = () => {
     const [text, setText] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const [videoPreview, setVideoPreview] = useState(null);
-    const [songPreview, setSongPreview] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const fileInputRef = useRef(null);
     const videoInputRef = useRef(null);
-    const songInputRef = useRef(null);
+
 
     const { sendMessage } = useChatStore();
 
@@ -46,11 +45,10 @@ const MessageInput = () => {
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (!text.trim() && !imagePreview && !videoPreview && !songPreview) return;
+        if (!text.trim() && !imagePreview && !videoPreview) return;
 
         let uploadedImageUrl = null;
         let uploadedVideoUrl = null;
-        let uploadedSongUrl = null;
 
         if (imagePreview && fileInputRef.current.files[0]) {
             uploadedImageUrl = await uploadToCloudinary(fileInputRef.current.files[0], "image");
@@ -60,27 +58,22 @@ const MessageInput = () => {
             uploadedVideoUrl = await uploadToCloudinary(videoInputRef.current.files[0], "video");
         }
 
-        if (songPreview && songInputRef.current.files[0]) {
-            uploadedSongUrl = await uploadToCloudinary(songInputRef.current.files[0], "audio");
-        }
 
         await sendMessage({
             text: text.trim(),
             image: uploadedImageUrl,
             video: uploadedVideoUrl,
-            song: uploadedSongUrl,
         });
 
         setText("");
         setImagePreview(null);
         setVideoPreview(null);
-        setSongPreview(null);
     };
 
     return (
         <div className="p-4 w-full relative">
             {/* Media Preview */}
-            {(imagePreview || videoPreview || songPreview) && (
+            {(imagePreview || videoPreview) && (
                 <div className="mb-3 flex items-center gap-2">
                     {imagePreview && (
                         <img src={imagePreview} alt="Preview" className="w-20 h-20 object-cover rounded-lg border border-zinc-700" />
@@ -88,14 +81,10 @@ const MessageInput = () => {
                     {videoPreview && (
                         <video src={videoPreview} controls className="w-20 h-20 rounded-lg border border-zinc-700" />
                     )}
-                    {songPreview && (
-                        <audio src={songPreview} controls className="w-40 border border-zinc-700 rounded-lg" />
-                    )}
                     <button
                         onClick={() => {
                             setImagePreview(null);
                             setVideoPreview(null);
-                            setSongPreview(null);
                         }}
                         className="btn btn-sm btn-circle bg-base-300"
                     >
@@ -156,22 +145,13 @@ const MessageInput = () => {
                     <FileVideo size={20} />
                 </button>
 
-                {/* Song Upload */}
-                <input type="file" accept="audio/*" className="hidden" ref={songInputRef} onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file && file.type.startsWith("audio/")) {
-                        setSongPreview(URL.createObjectURL(file));
-                    }
-                }} />
-                <button type="button" className="btn btn-circle text-zinc-400" onClick={() => songInputRef.current?.click()}>
-                    <Music size={20} />
-                </button>
+                
 
                 {/* Send Button */}
                 <button
                     type="submit"
                     className="btn btn-sm btn-circle"
-                    disabled={!text.trim() && !imagePreview && !videoPreview && !songPreview}
+                    disabled={!text.trim() && !imagePreview && !videoPreview}
                 >
                     {uploading ? "Uploading..." : <Send size={22} />}
                 </button>
