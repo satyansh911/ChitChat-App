@@ -92,11 +92,17 @@ const MusicPlayer = ({ roomId }) => {
     };
   }, []);
 
+  
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
+
   const playSong = (songUrl, name) => {
     if (!songUrl) return;
-    console.log("Song in playSong portion:",songUrl);
+    const truncatedName = truncateText(name,30);
+    console.log("Truncated song name in playSong portion:",truncatedName);
 
-    setCurrentSong(songUrl, name);
+    setCurrentSong(songUrl, truncatedName);
     setIsPlaying(true);
 
     if (audioRef.current) {
@@ -109,7 +115,7 @@ const MusicPlayer = ({ roomId }) => {
       roomId,
       action: "play",
       songUrl: songUrl,
-      songName: name,
+      songName: truncatedName,
       currentTime: 0,
     });
   };
