@@ -94,7 +94,7 @@ const ChatContainer = () => {
       {/* ✅ Chat Section (Shrinks when music player opens) */}
       <div
         className={`flex flex-col flex-grow overflow-auto transition-all duration-300 ${
-          isMusicPlayerOpen ? "w-[800px]" : "w-[1220px]"
+          isMusicPlayerOpen ? "w-[700px]" : "w-[1150px]"
         }`}
       >
         <ChatHeader />
