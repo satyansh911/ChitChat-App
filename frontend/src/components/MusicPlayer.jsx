@@ -28,6 +28,16 @@ const MusicPlayer = ({ roomId }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
+  const [currentGif, setCurrentGif] = useState("/select_a_song.gif");
+
+  useEffect(() => {
+    if (isPlaying) {
+      setCurrentGif("/aesthetic.gif");
+    } else {
+      setCurrentGif("/select_a_song.gif");
+    }
+  }, [isPlaying]);
+  
 
   useEffect(() => {
     if (roomId) {
@@ -135,7 +145,7 @@ const MusicPlayer = ({ roomId }) => {
     socket.emit("music-sync", {
       roomId,
       action: newState ? "play" : "pause",
-      songUrl: currentSong,
+      songUrl: songUrl,
       currentTime: audioRef.current ? audioRef.current.currentTime : 0,
     });
   };
@@ -160,36 +170,24 @@ const MusicPlayer = ({ roomId }) => {
       console.log("Extracted song name:", name);
   
       setUploadedSong(uploadedUrl);
+      setCurrentGif("/select_a_song.gif")
       setUploadedSongName(name);
       playSong(uploadedUrl, name);  
     } catch (error) {
       console.error("Upload failed:", error);
     }
   };
-  
 
   return (
     <div className="p-4 border rounded-lg bg-black shadow-lg text-center w-full h-full">
-      {showGif && (
-        <div className="flex flex-col items-center absolute top-[140px] right-[80px] 
+        <div className="flex flex-col items-center relative top-[30px] -right-[35px] 
   w-[300px] h-[300px] bg-gray-500 shadow-lg rounded-2xl border border-gray-700 overflow-hidden">
-  <img src="/aesthetic.gif" alt="GIF animation" className="w-full h-full object-cover" />
+  <img src={currentGif} alt="GIF animation" className="w-full h-full object-cover" />
   
 </div>
-
-      )}
-      {showDiscoLight && (
-        <div className="flex flex-col items-center absolute top-[595px] right-[194px]">
-      <lord-icon 
-      src="/wired-flat-1062-disco-ball-hover-pinch.json"
-      trigger={isPlaying ? "loop" : "hover"}
-      style={{ width: "70px", height: "70px", cursor: "pointer" }}
-    ></lord-icon>
-      </div>
-      )}
       
 
-      <div className="flex flex-col items-center relative top-[320px]">
+      <div className="flex flex-col items-center relative top-[18px]">
         {isPlaying ? 
       <lord-icon 
       src="/Animation - 1741370233569 (1).json"
@@ -208,12 +206,12 @@ const MusicPlayer = ({ roomId }) => {
 
       {/* Display Song Name */}
       {songName && (
-        <div className="text-center mt-2 text-white font-semibold relative top-[290px]">
+        <div className="text-center mt-2 text-white font-semibold relative -top-[10px]">
           {songName}
         </div>
       )}
 
-      <div className="flex items-center w-full mt-2 relative top-[290px]">
+      <div className="flex items-center w-full mt-2 relative -top-[10px]">
         
         <span className="text-sm text-white">{formatTime(currentTime)}</span>
         <input
@@ -233,7 +231,7 @@ const MusicPlayer = ({ roomId }) => {
 
       <div className="flex items-center justify-between mt-3">
   {/* Left Side - Upload Button */}
-  <div className="flex items-center space-x-4 relative top-[370px]">
+  <div className="flex items-center space-x-4 relative top-[60px]">
   {/* Upload Song Button */}
   <div className="relative group">
     <lord-icon 
@@ -266,7 +264,7 @@ const MusicPlayer = ({ roomId }) => {
   
 
   {/* Center Controls */}
-  <div className="flex items-center space-x-4 ml-16 relative left-[-65px] top-[290px]">
+  <div className="flex items-center space-x-4 ml-16 relative left-[-65px] -top-[20px] z-[0]">
     
     <SkipBack size={30} className=" text-white cursor-pointer" onClick={() => (audioRef.current.currentTime -= 10)} />
     <button className=" bg-gray-800 text-white p-2 rounded-full" onClick={togglePlayPause}>
@@ -274,11 +272,19 @@ const MusicPlayer = ({ roomId }) => {
     </button>
     <SkipForward size={30} className="text-white cursor-pointer" onClick={() => (audioRef.current.currentTime += 10)} />
     
-    
+    {showDiscoLight && (
+        <div className="flex flex-col items-center absolute top-[25px] right-[34px] z-[-1]">
+      <lord-icon 
+      src="/wired-flat-1062-disco-ball-hover-pinch.json"
+      trigger={isPlaying ? "loop" : "hover"}
+      style={{ width: "70px", height: "70px", cursor: "pointer" }}
+    ></lord-icon>
+      </div>
+      )}
   </div>
 
   {/* Right Side - Volume Control */}
-  <div className="flex items-center space-x-2 relative right-[0px] top-[370px] group">
+  <div className="flex items-center space-x-2 relative right-[10px] top-[60px] group">
     <lord-icon 
       src="/wired-lineal-1054-amazon-echo-speaker-hover-pinch.json" 
       trigger="loop" 
