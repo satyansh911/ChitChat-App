@@ -34,6 +34,7 @@ const MessageInput = () => {
                     formData
                 );
                 uploadedImageUrl = response.data.secure_url;
+                console.log("Uploaded Image URL:", uploadedImageUrl);
             }
 
             await sendMessage({
