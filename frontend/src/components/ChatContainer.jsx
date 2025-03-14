@@ -124,6 +124,24 @@ const ChatContainer = () => {
                 <div className="chat-bubble relative flex flex-col">
                   {message.text && <span className="ml-2">{message.text}</span>}
 
+                  {/* ✅ Add Image Rendering Here */}
+                  {message.image && (
+                    <img
+                      src={message.image}
+                      alt="Sent Image"
+                      className="max-w-xs max-h-60 rounded-lg mt-2 cursor-pointer"
+                      onClick={() => window.open(message.image, "_blank")}
+                    />
+                  )}
+
+                  {/* ✅ Video Message Handling */}
+                  {message.video && (
+                    <video controls className="rounded-lg w-60 mt-2">
+                      <source src={message.video} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+
                   {reactions[message._id]?.length > 0 && (
                     <div className="absolute -bottom-3 px-2 py-1 rounded-md bg-black/50 text-white text-xs flex space-x-1">
                       {Array.from(new Set(reactions[message._id].map((r) => r.emoji))).map((emoji, index) => (

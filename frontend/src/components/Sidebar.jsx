@@ -86,10 +86,10 @@ const Sidebar = () => {
                             )}
                         </div>
                         <div className="hidden lg:block text-left min-w-0 flex-1">
-                            <div className="font-medium truncate group-hover:text-yellow-400">
+                            <div className="font-medium truncate group-hover:text-green-700">
                                 {user.fullName}
                             </div>
-                            <div className="text-sm text-zinc-400">
+                            <div className={`text-sm ${onlineUsers.includes(user._id) ? "text-green-500" : "text-red-500"}`}>
                                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                             </div>
                         </div>
