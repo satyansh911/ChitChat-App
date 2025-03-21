@@ -91,15 +91,11 @@ export const useAuthStore = create ((set, get) => ({
             await axiosInstance.post("/auth/logout");
             localStorage.removeItem("token");
             set({ authUser: null });
-    
-            // Show the toast immediately
             toast.success("Logged Out Successfully");
-    
-            // Delay redirection to allow the toast to be visible
             setTimeout(() => {
-                get().disconnectSocket(); // Disconnect socket right before redirect
+                get().disconnectSocket();
                 window.location.href = '/login';
-            }, 1500); // 1.5-second delay for smoother experience
+            }, 1500);
         } catch (error) {
             toast.error(error.response?.data?.message || "Logout failed.");
         }

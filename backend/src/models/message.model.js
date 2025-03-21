@@ -24,7 +24,7 @@ const messageSchema = new mongoose.Schema(
     reactions: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        emoji: { type: String }, // Stores the emoji reaction
+        emoji: { type: String },
       },
     ],
   },

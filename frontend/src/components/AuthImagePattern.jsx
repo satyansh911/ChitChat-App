@@ -1,7 +1,7 @@
 const AuthImagePattern = ({ title, subtitle, images }) => {
     return (
       <div className="hidden lg:flex flex-1 items-center justify-center bg-base-200 p-12 rounded-3xl">
-        <div className="w-full max-w-lg text-center"> {/* Adjust width */}
+        <div className="w-full max-w-lg text-center">
           <div className="grid grid-cols-3 gap-4 mb-8 w-full">
             {images.map((imgSrc, i) => (
               <div key={i} className="w-full aspect-square rounded-2xl overflow-hidden shadow-lg">

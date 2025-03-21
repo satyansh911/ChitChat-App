@@ -21,14 +21,14 @@ export const signup = async (req, res) => {
         const newUser = new User({ fullName, email, password: hashedPassword });
         await newUser.save();
 
-        const token = generateToken(newUser._id, res); // ✅ Get token here
+        const token = generateToken(newUser._id, res);
 
         res.status(201).json({
             _id: newUser._id,
             fullName: newUser.fullName,
             email: newUser.email,
             profilePic: newUser.profilePic,
-            token, // ✅ Send token in response
+            token,
         });
     } catch (error) {
         console.log("Error in signup controller:", error.message);
@@ -44,14 +44,14 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid Credentials." });
         }
 
-        const token = generateToken(user._id, res); // ✅ Get token here
+        const token = generateToken(user._id, res);
 
         res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
-            token, // ✅ Send token in response
+            token,
         });
     } catch (error) {
         console.log("Error in login controller:", error.message);

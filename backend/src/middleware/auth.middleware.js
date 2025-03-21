@@ -9,8 +9,6 @@ export const protectRoute = async (req, res, next) => {
             token = req.headers.authorization.split(" ")[1];
         }
 
-        console.log("Incoming Token:", token);  // 🔍 Debugging line
-
         if (!token) {
             return res.status(401).json({ message: "Unauthorized - No Token Provided" });
         }

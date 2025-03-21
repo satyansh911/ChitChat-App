@@ -8,7 +8,15 @@ import { formatMessageTime } from "../lib/utils";
 import { io } from "socket.io-client";
 import MusicPlayer from "./MusicPlayer";
 import { useMusicStore } from "../store/musicStore.js";
+import newChatSound from "/message_from_new_chat.mp3";
+import messageReceivedSound from "/received_message.mp3";
 
+const newChatAudio = new Audio(newChatSound);
+const messageReceivedAudio = new Audio(messageReceivedSound);
+const playSound = (audio) => {
+  audio.currentTime = 0;
+  audio.play();
+}
 const socket = io(
   import.meta.env.MODE === "development"
     ? "http://localhost:5001"
@@ -63,6 +71,22 @@ const ChatContainer = () => {
     };
   }, []);
 
+  useEffect(() => {
+    socket.on("newMessage", (newMessage) => {
+      if (newMessage.senderId === authUser._id) {
+        playSound(newChatAudio);
+      } else {
+        playSound(messageReceivedAudio);
+      }
+    });
+  
+    return () => {
+      socket.off("newMessage");
+    };
+  }, []);
+  
+  
+
   const sendReaction = (messageId, emoji) => {
     const existingReaction = reactions[messageId]?.find(
       (reaction) => reaction.userId === authUser._id
@@ -72,11 +96,6 @@ const ChatContainer = () => {
     } else {
       socket.emit("sendReaction", { messageId, userId: authUser._id, emoji });
     }
-  };
-
-  const handlePlaySong = (songUrl) => {
-    setCurrentSong(songUrl);
-    socket.emit("music-sync", { roomId, action: "play", songUrl });
   };
 
   if (isMessagesLoading) {
@@ -91,7 +110,6 @@ const ChatContainer = () => {
 
   return (
     <div className="flex h-full transition-all duration-300">
-      {/* ✅ Chat Section (Shrinks when music player opens) */}
       <div
         className={`flex flex-col flex-grow overflow-auto transition-all duration-300 ${
           isMusicPlayerOpen ? "w-[700px]" : "w-[1150px]"
@@ -123,8 +141,6 @@ const ChatContainer = () => {
                 </div>
                 <div className="chat-bubble relative flex flex-col">
                   {message.text && <span className="ml-2">{message.text}</span>}
-
-                  {/* ✅ Add Image Rendering Here */}
                   {message.image && (
                     <img
                       src={message.image}
@@ -133,10 +149,8 @@ const ChatContainer = () => {
                       onClick={() => window.open(message.image, "_blank")}
                     />
                   )}
-
-                  {/* ✅ Video Message Handling */}
                   {message.video && (
-                    <video controls className="rounded-lg w-60 mt-2">
+                    <video controls className="rounded-lg w-60 mt-2" key={message._id}>
                       <source src={message.video} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
@@ -151,7 +165,10 @@ const ChatContainer = () => {
                   )}
                 </div>
                 {hoveredMessage === message._id && (
-                  <div className="absolute -top-6 px-2 py-1 rounded-md bg-gray-800 text-white flex space-x-2">
+                  <div
+                    className={`absolute px-2 py-1 rounded-md bg-gray-800 text-white flex space-x-2 
+                      ${isSentByMe ? "-top-2 right-14" : "-top-2 left-14"}`}
+                  >
                     {["❤️", "😂", "👍", "🔥"].map((emoji) => (
                       <button key={emoji} onClick={() => sendReaction(message._id, emoji)} className="text-sm">
                         {emoji}
@@ -159,6 +176,7 @@ const ChatContainer = () => {
                     ))}
                   </div>
                 )}
+
               </div>
             );
           })}
@@ -166,8 +184,6 @@ const ChatContainer = () => {
 
         <MessageInput />
       </div>
-
-      {/* ✅ Music Player Section (Moves to the right) */}
       {isMusicPlayerOpen && (
         <div className="w-[425px] h-full bg-base-100 border-l border-gray-300 p-2.5">
           <MusicPlayer roomId={roomId} />

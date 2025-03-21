@@ -19,7 +19,7 @@ export const useMusicStore = create((set) => ({
           showDiscoLight: true,
         })),
     setIsPlaying: (isPlaying) => set({ isPlaying }),
-    setIsMusicPlayerOpen: (isOpen) => set({ isMusicPlayerOpen: isOpen }),  // ✅ Add function to update state
+    setIsMusicPlayerOpen: (isOpen) => set({ isMusicPlayerOpen: isOpen }),
     toggleMusicPlayer: () => {
         set((state) => ({ isMusicPlayerOpen: !state.isMusicPlayerOpen}))
     },

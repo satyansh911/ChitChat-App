@@ -13,8 +13,6 @@ const io = new Server(server, {
 });
 
 const userSocketMap = {};
-
-// Function to get the socket ID of a user
 export function getReceiverSocketId(userId) {
     return userSocketMap[userId];
 }
@@ -27,28 +25,17 @@ io.on("connection", (socket) => {
         userSocketMap[userId] = socket.id;
     }
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-    // ✅ Listen for reactions
     socket.on("sendReaction", ({ messageId, userId, emoji }) => {
         io.emit("messageReaction", { messageId, userId, emoji });
     });
-
-    // ✅ Handle user joining a chat room
     socket.on("join-room", (roomId) => {
         socket.join(roomId);
         console.log(`User ${socket.id} joined room: ${roomId}`);
     });
-
-    // ✅ Handle synchronized music playback
     socket.on("music-sync", ({ roomId, action, songUrl, songName, currentTime }) => {
         console.log(`Syncing music in room ${roomId}:`, { action, songUrl, songName, currentTime });
-    
-        // Broadcast to all users in the room except the sender
         io.to(roomId).emit("music-sync", { action, songUrl, songName, currentTime });
     });
-    
-    
-
     socket.on("disconnect", () => {
         console.log("A user disconnected", socket.id);
         delete userSocketMap[userId];

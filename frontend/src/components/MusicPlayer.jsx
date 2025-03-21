@@ -68,6 +68,7 @@ const MusicPlayer = ({ roomId }) => {
         setIsPlaying(false);
         if (audioRef.current) {
           audioRef.current.pause();
+          audioRef.current.currentTime = currentTime;
         }
       }
     });
@@ -145,7 +146,8 @@ const MusicPlayer = ({ roomId }) => {
     socket.emit("music-sync", {
       roomId,
       action: newState ? "play" : "pause",
-      songUrl: songUrl,
+      songUrl: currentSong,
+      songName: songName,
       currentTime: audioRef.current ? audioRef.current.currentTime : 0,
     });
   };
@@ -156,17 +158,17 @@ const MusicPlayer = ({ roomId }) => {
   
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "my_preset"); // Replace with your Cloudinary preset
+    formData.append("upload_preset", "my_preset");
   
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dbi3tuuli/upload", // Replace with your Cloudinary cloud name
+        "https://api.cloudinary.com/v1_1/dbi3tuuli/upload",
         formData
       );
   
-      const uploadedUrl = response.data.secure_url; // Cloudinary URL
+      const uploadedUrl = response.data.secure_url;
       console.log("Cloudinary Song Link:",uploadedUrl)
-      const name = file.name.replace(/\.[^/.]+$/, ""); // Extract song name
+      const name = file.name.replace(/\.[^/.]+$/, "");
       console.log("Extracted song name:", name);
   
       setUploadedSong(uploadedUrl);
@@ -201,10 +203,7 @@ const MusicPlayer = ({ roomId }) => {
       ></lord-icon>
       }
       </div>
-      
-      
 
-      {/* Display Song Name */}
       {songName && (
         <div className="text-center mt-2 text-white font-semibold relative -top-[10px]">
           {songName}
@@ -261,8 +260,6 @@ const MusicPlayer = ({ roomId }) => {
   </div>
 </div>
 
-  
-
   {/* Center Controls */}
   <div className="flex items-center space-x-4 ml-16 relative left-[-65px] -top-[20px] z-[0]">
     
@@ -301,8 +298,6 @@ const MusicPlayer = ({ roomId }) => {
   />
   </div>
 </div>
-
-
 
       <input type="file" accept="audio/mp3" onChange={handleUpload} className="hidden" id="music-upload" />
       <audio ref={audioRef} />

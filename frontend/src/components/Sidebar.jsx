@@ -23,7 +23,7 @@ const Sidebar = () => {
     }, []);
 
     const handleUserSelect = (user) => {
-        setSelectedUser(user); // ✅ Set the selected user
+        setSelectedUser(user);
 
         useChatStore.setState((state) => ({
             users: state.users.map((u) =>
@@ -32,7 +32,7 @@ const Sidebar = () => {
         }));
 
         if (isMusicPlayerOpen) {
-            toggleMusicPlayer(); // ✅ Close Music Player when switching chats
+            toggleMusicPlayer();
         }
     };
 
@@ -89,7 +89,7 @@ const Sidebar = () => {
                             <div className="font-medium truncate group-hover:text-green-700">
                                 {user.fullName}
                             </div>
-                            <div className={`text-sm ${onlineUsers.includes(user._id) ? "text-green-500" : "text-red-500"}`}>
+                            <div className={`text-sm ${onlineUsers.includes(user._id) ? "text-green-500" : "text-gray-500"}`}>
                                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                             </div>
                         </div>

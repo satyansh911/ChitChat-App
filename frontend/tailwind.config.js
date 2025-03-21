@@ -2,12 +2,12 @@ import daisyui from "daisyui";
 
 /** @type {import('tailwindcss').Config} */
 export default  {
-  content: ["./src/**/*.{html,js,jsx,ts,tsx}"], // Adjust based on your file structure
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        darkBg: "#121212",   // Background
-        darkCard: "#1E1E1E", // Navbar & Cards
+        darkBg: "#121212",
+        darkCard: "#1E1E1E",
         textPrimary: "#FFFFFF",
         textSecondary: "#B0B3B8",
         accentGreen: "#22C55E",

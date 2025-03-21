@@ -12,7 +12,6 @@ const Navbar = () => {
   return (
     <header className="bg-[#191f25] border-b border-borderGray fixed w-full top-0 z-40 backdrop-blur-lg bg-darkCard/80 shadow-[0px_4px_10px_rgba(0,0,0,0.3)]">
   <div className="flex items-center justify-between h-16 px-6">
-    {/* Left Section (Logo + Name) */}
     <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-all">
       <lord-icon 
         trigger="loop"
@@ -28,8 +27,6 @@ const Navbar = () => {
         <Typewriter words={["ChitChat"]} loop={1} cursor cursorStyle="|" typeSpeed={100} />
       </motion.h1>
     </Link>
-
-    {/* Right Section (Buttons) */}
     <div className="flex items-center gap-2">
       <Link to={"/settings"} className="btn btn-sm gap-2">
         <Settings className="w-4 h-4" />

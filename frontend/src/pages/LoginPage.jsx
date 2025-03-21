@@ -18,7 +18,7 @@ import toast from 'react-hot-toast';
 
 defineElement(lottie.loadAnimation);
 
-const LoginPage = () => { // Removed async from here
+const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
