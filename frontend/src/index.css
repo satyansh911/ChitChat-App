@@ -6,20 +6,19 @@
 body {
     font-family: 'Inter', sans-serif;
   }
-  
-/* Hide scrollbar but show on scroll */
+
 .scrollbar-fade::-webkit-scrollbar {
   width: 8px;
   transition: opacity 0.3s;
-  opacity: 0; /* Initially hidden */
+  opacity: 0;
 }
 
 .scrollbar-fade:hover::-webkit-scrollbar {
-  opacity: 1; /* Visible on hover */
+  opacity: 1;
 }
 
 .scrollbar-fade::-webkit-scrollbar-thumb {
-  background: #c4a47a; /* Scrollbar color */
+  background: #c4a47a;
   border-radius: 8px;
 }
 

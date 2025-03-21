@@ -28,7 +28,7 @@
                 ],
             })
             .sort({ createdAt: 1 })
-            .lean(); // Converts Mongoose docs to plain JS objects
+            .lean();
     
             res.status(200).json(messages);
         } catch (error) {
@@ -41,7 +41,7 @@
 
     export const sendMessage = async (req,res) => {
         try{
-            const {text, image} = req.body;
+            const {text, image, video} = req.body;
             const { id : receiverId} = req.params;
             const senderId = req.user._id;
 
@@ -53,11 +53,21 @@
                 });
                 imageUrl = uploadResponse.secure_url;
             }
+
+            let videoUrl = null;
+            if(video){
+                const uploadResponse = await cloudinary.uploader.upload(video,{
+                    folder: "chat-videos",
+                    resource_type: "video",
+                });
+                videoUrl = uploadResponse.secure_url;
+            }
             const newMessage = new Message({
                 senderId,
                 receiverId,
                 text,
                 image : imageUrl,
+                video : videoUrl,
             });
             await newMessage.save();
 
@@ -85,16 +95,9 @@
             if (!message) {
                 return res.status(404).json({ error: "Message not found" });
             }
-    
-            // Remove previous reaction from the same user
             message.reactions = message.reactions.filter((r) => r.userId.toString() !== userId);
-    
-            // Add new reaction
             message.reactions.push({ userId, emoji });
-    
             await message.save();
-    
-            // ✅ Emit updated reactions to all connected users
             io.emit("messageReaction", { messageId, reactions: message.reactions });
     
             res.status(200).json({ message: "Reaction added successfully", data: message });

@@ -35,7 +35,7 @@ app.use("/songs", express.static(path.join(__dirname, "songs"), {
 }));
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, path.join(__dirname, "songs")), // Save inside the "songs" folder in the backend
+    destination: (req, file, cb) => cb(null, path.join(__dirname, "songs")),
     filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
     

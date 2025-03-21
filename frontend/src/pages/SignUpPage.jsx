@@ -19,7 +19,6 @@ import image9 from "../images/image9.jpeg";
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-// define "lord-icon" custom element with default properties
 defineElement(lottie.loadAnimation);
 
 
@@ -48,15 +47,13 @@ const SignUpPage = () => {
         const isValid = validateForm();
     
         if (isValid) {
-            const response = await signup(formData); // Ensure this returns { success: true/false }
+            const response = await signup(formData);
     
             if (response?.success) {
-                navigate("/"); // Redirect on successful signup
+                navigate("/");
             }
         }
     };
-    
-
     return (
         <div className ="min-h-screen grid lg:grid-cols-2">
             <div className = "flex flex-col justify-center items-center p-6 sm:p-12">
